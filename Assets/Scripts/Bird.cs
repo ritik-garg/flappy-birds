@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bird : MonoBehaviour
 {
-    //public static Bird instance;
     public float upForce = 200f;
     public GameObject gameStartText;
+    public Text levelText;
+    public AudioClip[] birdSounds;
+
     private bool clickedOnce = false;
     private Rigidbody2D rb2d;
     private Animator animator;
-    public enum GameStatus {NOTSTARTED, DEAD, PLAYING};
+    private AudioSource audioSource;
+
+    public enum GameStatus {NOTSTARTED, DEAD, PLAYING, UPGRADING};
     public static GameStatus gameStatus;
 
     // Start is called before the first frame update
@@ -21,6 +26,8 @@ public class Bird : MonoBehaviour
         animator = GetComponent<Animator>();
         gameStatus = GameStatus.NOTSTARTED;
         Physics2D.gravity = new Vector2(0, 0);
+        levelText.text = "LEVEL: " + Levels.currentLevel.ToString();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -42,14 +49,19 @@ public class Bird : MonoBehaviour
                 animator.SetTrigger("Flap");
                 rb2d.velocity = Vector2.zero;
                 rb2d.AddForce(new Vector2(0, upForce));
+                audioSource.PlayOneShot(birdSounds[0]);
             }
         }
     }
 
     private void OnCollisionEnter2D(Collision2D other) {
-        animator.SetTrigger("Die");
-        rb2d.velocity = Vector2.zero;
-        gameStatus = GameStatus.DEAD;  
-        GameController.instance.BirdDied();
+        if(gameStatus != GameStatus.DEAD) {
+            audioSource.PlayOneShot(birdSounds[2]);
+            animator.SetTrigger("Die");
+            rb2d.velocity = Vector2.zero;
+            gameStatus = GameStatus.DEAD;  
+            audioSource.PlayOneShot(birdSounds[1]);
+            GameController.instance.BirdDied();
+        }
     }
 }
