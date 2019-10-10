@@ -14,14 +14,20 @@ public class Bird : MonoBehaviour
     private Rigidbody2D rb2d;
     private Animator animator;
     private AudioSource audioSource;
+    private float dispalyHeight, displayWidth;
 
-    public enum GameStatus {NOTSTARTED, DEAD, PLAYING, UPGRADING};
+    public enum GameStatus {NOTSTARTED, DEAD, PLAYING, UPGRADING, PAUSED};
     public static GameStatus gameStatus;
 
     // Start is called before the first frame update
     void Start()
     {
-        // instance = this;
+        // dispalyHeight = 0.9f * Display.main.systemHeight;
+        // displayWidth = 0.9f * Display.main.systemWidth;
+
+        dispalyHeight = 0.9f * Screen.height;
+        displayWidth = 0.9f * Screen.width;
+
         rb2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         gameStatus = GameStatus.NOTSTARTED;
@@ -45,7 +51,12 @@ public class Bird : MonoBehaviour
             animator.SetTrigger("Flap");
         }
         else if(gameStatus == GameStatus.PLAYING) {
-            if (Input.GetMouseButtonDown(0)) {
+            if (Input.GetMouseButtonDown(0) && this.transform.position.y < 5f) {
+                if(Input.mousePosition.y > dispalyHeight) {
+                    if(Input.mousePosition.x > displayWidth) {
+                        gameStatus = GameStatus.PAUSED;
+                    }
+                }
                 animator.SetTrigger("Flap");
                 rb2d.velocity = Vector2.zero;
                 rb2d.AddForce(new Vector2(0, upForce));

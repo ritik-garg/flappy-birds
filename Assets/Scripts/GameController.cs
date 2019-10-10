@@ -7,22 +7,14 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
-    public Text scoreText;
-    public Text highScoreText;
-    public GameObject gameOverText;
-    public GameObject levelText;
+    public Text scoreText, highScoreText, scorePauseText, highScorePauseText, gameOverText, tapToStartText;
+    public GameObject levelText, PauseUI, GameDetailsUI;
     public static int highScore = 0;
     public float scrollSpeed;
 
-    // private float maxScrollSpeed = -5f;
-    // private float acceleration = 0.0005f;
-    private int score = 0;
-    private int currentLevel;
+    private bool isGamePaused = false;
+    private int score = 0, currentLevel;
 
-    // void updateSpeed() {
-    //     scrollSpeed = -Mathf.Max(2f, Mathf.Sqrt(score / 5) * Mathf.Log(score));
-    //     Physics2D.gravity = new Vector2(0, -Mathf.Max(9.81f, 5f * Mathf.Sqrt(-scrollSpeed)));
-    // }
     // Start is called before the first frame update
     void Awake()
     {
@@ -43,9 +35,6 @@ public class GameController : MonoBehaviour
         else {
             highScoreText.text = "Max Score : " + highScore.ToString();
         }
-        
-        // highScoreText.text = "High Score : " + highScore.ToString();  
-        // highScoreText.text = "High Score : " + Physics2D.gravity.y.ToString();  
     }
 
     public void BirdScored() {
@@ -69,25 +58,60 @@ public class GameController : MonoBehaviour
         scoreText.text = "Score : " + score.ToString();
     }
 
+    public void PauseGame() {
+        Bird.gameStatus = Bird.GameStatus.PAUSED;
+    }
+    public void OnMenuButtonClick() {
+        GameDetailsUI.SetActive(false);
+        scorePauseText.text = "SCORE: " + score.ToString();
+        
+        if(currentLevel == Levels.maxLevels) {
+            highScorePauseText.text = "HIGH SCORE: " + highScore.ToString();
+        }
+        else {
+            highScorePauseText.text = "MAX SCORE: " + highScore.ToString();
+        }
+
+        if(Bird.gameStatus == Bird.GameStatus.DEAD) {
+            gameOverText.text = "OOPS! BIRD DIED";
+            tapToStartText.text = "FLAP TO RESTART";
+        }
+        else if(Bird.gameStatus == Bird.GameStatus.PAUSED) {
+            gameOverText.text = "GAME PAUSED";
+            tapToStartText.text = "TAP TO CONTINUE";
+        }
+        else {
+            gameOverText.text = "LEVEL COMPLETED";
+            tapToStartText.text = "TAP TO CONTINUE";
+        }
+
+        PauseUI.SetActive(true);
+        Time.timeScale = 0f;
+        isGamePaused = true;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        // if(gameOver && Input.GetMouseButtonDown(0)) {
-        if((Bird.gameStatus == Bird.GameStatus.DEAD && Input.GetMouseButtonDown(0)) || (Bird.gameStatus == Bird.GameStatus.UPGRADING)) {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if(Bird.gameStatus == Bird.GameStatus.DEAD || Bird.gameStatus == Bird.GameStatus.UPGRADING || Bird.gameStatus == Bird.GameStatus.PAUSED) {
+            OnMenuButtonClick();
+            if(Input.GetMouseButtonDown(0)) {
+                Time.timeScale = 1f;
+                if(Bird.gameStatus != Bird.GameStatus.PAUSED) {
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+                else {
+                    Bird.gameStatus = Bird.GameStatus.PLAYING;
+                    GameDetailsUI.SetActive(true);
+                    PauseUI.SetActive(false);
+                    isGamePaused = false;
+                }
+            }
         }
-        // else if(Bird.gameStatus == Bird.GameStatus.PLAYING) {
-        //     if(scrollSpeed > maxScrollSpeed) {
-        //         scrollSpeed -= acceleration;
-        //     }
-        //     highScoreText.text = "High Score : " + scrollSpeed.ToString(); 
-        // }
     }
 
     public void BirdDied() {
         levelText.SetActive(false);
-        gameOverText.SetActive(true);
-        // gameOver = true;
         Bird.gameStatus = Bird.GameStatus.DEAD;
         Levels.UpgradeLevel();
     }
