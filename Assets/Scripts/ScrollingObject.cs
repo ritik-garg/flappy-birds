@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ScrollingObject : MonoBehaviour
 {
     private Rigidbody2D rigidBody2D;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +15,6 @@ public class ScrollingObject : MonoBehaviour
     void Update()
     {
         rigidBody2D.velocity = new Vector2(GameController.instance.scrollSpeed, 0);
-        // if(GameController.instance.gameOver) {
         if(Bird.gameStatus == Bird.GameStatus.DEAD) {
             rigidBody2D.velocity = Vector2.zero;
         }

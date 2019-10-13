@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Levels : MonoBehaviour
 {
-    public static int currentLevel = 1;
-    public static int maxLevels = 4;
-    public static int backgroundScene = 0;
+    public static int currentLevel = 1, maxLevels = 4, backgroundScene = 0;
+
     public struct LevelData 
     {
         public float scrollSpeed;
@@ -14,6 +11,7 @@ public class Levels : MonoBehaviour
     };
 
     public static LevelData[] levelData;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,12 +22,6 @@ public class Levels : MonoBehaviour
         }
         levelData[maxLevels - 1].maxScore = int.MaxValue;
         levelData[maxLevels - 1].scrollSpeed = -5f;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public static void UpgradeLevel() 

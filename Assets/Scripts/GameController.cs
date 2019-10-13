@@ -1,19 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
+    public static int highScore = 0;
+
     public Text scoreText, highScoreText, scorePauseText, highScorePauseText, gameOverText, tapToStartText;
     public GameObject levelText, PauseUI, GameDetailsUI;
-    public static int highScore = 0;
     public float scrollSpeed;
 
-    private bool isGamePaused = false;
     private int score = 0, currentLevel;
+    private float dispalyHeight, displayWidth;
 
     // Start is called before the first frame update
     void Awake()
@@ -24,6 +23,10 @@ public class GameController : MonoBehaviour
         else if(instance != this){
             Destroy(gameObject);
         }
+
+        dispalyHeight = 0.85f * Screen.height;
+        displayWidth = 0.85f * Screen.width;
+
         currentLevel = Levels.currentLevel;
         scrollSpeed = Levels.levelData[currentLevel - 1].scrollSpeed;
         highScore = currentLevel == Levels.maxLevels ? highScore : Levels.levelData[currentLevel - 1].maxScore;
@@ -34,6 +37,27 @@ public class GameController : MonoBehaviour
         }
         else {
             highScoreText.text = "Max Score : " + highScore.ToString();
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if(Bird.gameStatus == Bird.GameStatus.DEAD || Bird.gameStatus == Bird.GameStatus.UPGRADING || Bird.gameStatus == Bird.GameStatus.PAUSED) {
+            OnMenuButtonClick();
+            if(Input.GetMouseButtonDown(0)) {
+                if(Input.mousePosition.y < dispalyHeight && Input.mousePosition.x < displayWidth) {
+                    if(Bird.gameStatus != Bird.GameStatus.PAUSED) {
+                        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                    }
+                    else {
+                        GameDetailsUI.SetActive(true);
+                        PauseUI.SetActive(false);
+                        Bird.gameStatus = Bird.GameStatus.PLAYING;
+                    }
+                    Time.timeScale = 1f;
+                }
+            }
         }
     }
 
@@ -58,10 +82,7 @@ public class GameController : MonoBehaviour
         scoreText.text = "Score : " + score.ToString();
     }
 
-    public void PauseGame() {
-        Bird.gameStatus = Bird.GameStatus.PAUSED;
-    }
-    public void OnMenuButtonClick() {
+    private void OnMenuButtonClick() {
         GameDetailsUI.SetActive(false);
         scorePauseText.text = "SCORE: " + score.ToString();
         
@@ -87,27 +108,6 @@ public class GameController : MonoBehaviour
 
         PauseUI.SetActive(true);
         Time.timeScale = 0f;
-        isGamePaused = true;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if(Bird.gameStatus == Bird.GameStatus.DEAD || Bird.gameStatus == Bird.GameStatus.UPGRADING || Bird.gameStatus == Bird.GameStatus.PAUSED) {
-            OnMenuButtonClick();
-            if(Input.GetMouseButtonDown(0)) {
-                Time.timeScale = 1f;
-                if(Bird.gameStatus != Bird.GameStatus.PAUSED) {
-                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-                }
-                else {
-                    Bird.gameStatus = Bird.GameStatus.PLAYING;
-                    GameDetailsUI.SetActive(true);
-                    PauseUI.SetActive(false);
-                    isGamePaused = false;
-                }
-            }
-        }
     }
 
     public void BirdDied() {

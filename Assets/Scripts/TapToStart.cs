@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,14 +8,7 @@ public class TapToStart : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // startText = GetComponent<Text>();
         StartCoroutine(BlinkText());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public IEnumerator BlinkText() {
