@@ -102,6 +102,7 @@ public class GameController : MonoBehaviour
             tapToStartText.text = "TAP TO CONTINUE";
         }
         else {
+            gameOverText.color = new Color32(0, 204, 0, 255);
             gameOverText.text = "LEVEL COMPLETED";
             tapToStartText.text = "TAP TO CONTINUE";
         }

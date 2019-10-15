@@ -13,7 +13,7 @@ public class Bird : MonoBehaviour
     private Rigidbody2D rb2d;
     private Animator animator;
     private AudioSource audioSource;
-    private float dispalyHeight, displayWidth, upForce = 250f;
+    private float dispalyHeight, displayWidth, upForce = 420f;
 
     public enum GameStatus {NOTSTARTED, DEAD, PLAYING, UPGRADING, PAUSED};
     public static GameStatus gameStatus;
@@ -56,7 +56,7 @@ public class Bird : MonoBehaviour
             }
             else if(!clickedOnce) {
                 gameStatus = GameStatus.PLAYING;
-                Physics2D.gravity = new Vector2(0, -9.81f);
+                Physics2D.gravity = new Vector2(0, -20f);
                 clickedOnce = true;
                 gameStartText.SetActive(false);
             }

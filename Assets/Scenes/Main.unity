@@ -470,7 +470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86268e41a8f6d1d47ae190669564f36e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  columnPoolSize: 5
   columnPrefab: {fileID: 418950955124702551, guid: 5147ccba45a73204c86f0d26fc867945,
     type: 3}
 --- !u!1 &186725841
@@ -816,7 +815,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8229397d93250cc43a1e3ab6da613e8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upForce: 200
   gameStartText: {fileID: 850221733}
   levelText: {fileID: 186725844}
   birdSounds:
@@ -979,7 +977,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e8c1f13d18b03524ca6bb0f8eb92330b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 13675a07d2abaee48bdc21d05b4ac265, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1

@@ -18,7 +18,7 @@ public class Levels : MonoBehaviour
         levelData = new LevelData[maxLevels];
         for(int i = 0; i < maxLevels - 1; ++i) {
             levelData[i].scrollSpeed = -(3f + i);
-            levelData[i].maxScore = 2;
+            levelData[i].maxScore = 5;
         }
         levelData[maxLevels - 1].maxScore = int.MaxValue;
         levelData[maxLevels - 1].scrollSpeed = -5f;
